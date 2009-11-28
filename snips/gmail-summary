@@ -1,0 +1,31 @@
+#!/usr/bin/env perl
+
+use warnings;
+use strict;
+
+use Google::Ajax;
+use Lingua::EN::Inflect qw(inflect);
+
+print "usage: gmail-summary <email> <password>\n" and exit 1 if @ARGV != 1;
+my ($email, $password) = @ARGV;
+
+my $m = Google::Ajax::Mail->new(
+    auth => Google::Ajax::ClientLogin->new(
+        email    => $email,
+        password => $password,
+
+    ),
+#    auth => Google::Ajax::SSO->new(
+#        user   => $username,
+#        domain => $DOMAIN,
+#        key    => "/home/rob/code/google/keys/$DOMAIN.key",
+#    ),
+);
+
+my $usage = $m->get_usage;
+my $quota = $m->get_quota;
+
+my $unread = $m->get_unread("inbox");
+
+printf "Usage: %d MB of %d MB (%d%%)\n", $usage, $quota, $usage / $quota * 100;
+printf inflect("%d unread PL_N(message,$unread).\n"), $unread;
