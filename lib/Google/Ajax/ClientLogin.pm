@@ -44,10 +44,14 @@ sub login {
                                  service     => "apps",
     });
 
+    # XXX error check
+
     my ($token) = $self->{app}->get_mech->content =~ m/^Auth=(.+?)$/mg;
     $self->{app}->get_mech->default_header("Authorization" => "GoogleLogin auth=$token");
    
     $self->{app}->get_mech->get($self->{app}->get_service_url);
+
+    # XXX error check
 
     return;
 }

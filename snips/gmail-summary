@@ -9,7 +9,10 @@ use Lingua::EN::Inflect qw(inflect);
 print "usage: gmail-summary <email> <password>\n" and exit 1 if @ARGV != 1;
 my ($email, $password) = @ARGV;
 
+my ($domain) = $email =~ m/\@(.*)$/;
+
 my $m = Google::Ajax::Mail->new(
+    domain => $domain,
     auth => Google::Ajax::ClientLogin->new(
         email    => $email,
         password => $password,
@@ -17,8 +20,8 @@ my $m = Google::Ajax::Mail->new(
     ),
 #    auth => Google::Ajax::SSO->new(
 #        user   => $username,
-#        domain => $DOMAIN,
-#        key    => "/home/rob/code/google/keys/$DOMAIN.key",
+#        domain => $domain,
+#        key    => "/home/rob/code/google/keys/$domain.key",
 #    ),
 );
 

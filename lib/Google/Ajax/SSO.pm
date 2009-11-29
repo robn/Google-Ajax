@@ -64,14 +64,18 @@ sub login {
         'request' => uri_unescape($saml_request->get_get_param()),
     });
 
-    $self->get_mech->post($saml_response->{service_url},
+    $self->{app}->get_mech->post($saml_response->{service_url},
         Content => {
             SAMLResponse => $saml_response->get_response_xml,
             RelayState => $relay_state,
         },
     );
 
-    $self->get_mech->get($self->{app}->get_service_url);
+    # XXX error check
+
+    $self->{app}->get_mech->get($self->{app}->get_service_url);
+    
+    # XXX error check
    
     return;
 }
