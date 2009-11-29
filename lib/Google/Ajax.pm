@@ -20,7 +20,7 @@ sub new {
             type     => SCALAR,
         },
         auth => {
-            can      => qw(set_mech login),
+            can      => qw(set_application login),
         },
         mech => {
             isa      => "WWW::Mechanize",
@@ -38,7 +38,7 @@ sub new {
         $self->{mech}->default_header("User-Agent" => "Mozilla/5.0 (compatible; Google::Ajax/$VERSION)");
     }
 
-    $self->{auth}->set_mech($self->{mech});
+    $self->{auth}->set_application($self);
 
     return $self;
 }
