@@ -3,108 +3,46 @@ package Google::Ajax;
 use warnings;
 use strict;
 
-=head1 NAME
+use Params::Validate qw(validate SCALAR);
+use WWW::Mechanize;
 
-Google::Ajax - The great new Google::Ajax!
+our $VERSION = "0.01";
 
-=head1 VERSION
+sub new {
+    my $class = shift;
 
-Version 0.01
+    my %args = validate(@_, {
+        service => {
+            type     => SCALAR,
+        },
+        auth => {
+            can      => qw(set_mech login),
+        },
+        mech => {
+            isa      => "WWW::Mechanize",
+            optional => 1,
+        },
+    });
 
-=cut
+    my $self = \%args;
 
-our $VERSION = '0.01';
+    if (!exists $self->{mech}) {
+        $self->{mech} = WWW::Mechanize->new;
+    }
 
+    if (!$self->{mech}->default_header("User-Agent")) {
+        $self->{mech}->default_header("User-Agent" => "Mozilla/5.0 (compatible; Google::Ajax/$VERSION)");
+    }
 
-=head1 SYNOPSIS
+    $self->{auth}->set_mech($self->{mech});
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
-    use Google::Ajax;
-
-    my $foo = Google::Ajax->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 FUNCTIONS
-
-=head2 function1
-
-=cut
-
-sub function1 {
+    return bless $self, $class;
 }
 
-=head2 function2
+sub login {
+    my $self = shift;
 
-=cut
-
-sub function2 {
+    return $self->{auth}->login;
 }
 
-=head1 AUTHOR
-
-Robert Norris, C<< <rob at cataclysm.cx> >>
-
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-google-ajax at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Google-Ajax>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc Google::Ajax
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Google-Ajax>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Google-Ajax>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Google-Ajax>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Google-Ajax/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2009 Robert Norris.
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
-
-
-=cut
-
-1; # End of Google::Ajax
+1;
