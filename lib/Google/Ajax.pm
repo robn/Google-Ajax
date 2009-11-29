@@ -3,6 +3,10 @@ package Google::Ajax;
 use warnings;
 use strict;
 
+use base qw(Class::Accessor);
+__PACKAGE__->follow_best_practice;
+__PACKAGE__->mk_ro_accessors(qw(service service_url mech));
+
 use Params::Validate qw(validate SCALAR);
 use WWW::Mechanize;
 
@@ -24,7 +28,7 @@ sub new {
         },
     });
 
-    my $self = \%args;
+    my $self = bless \%args, $class;
 
     if (!exists $self->{mech}) {
         $self->{mech} = WWW::Mechanize->new;
@@ -36,7 +40,7 @@ sub new {
 
     $self->{auth}->set_mech($self->{mech});
 
-    return bless $self, $class;
+    return $self;
 }
 
 sub login {
