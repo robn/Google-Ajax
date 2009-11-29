@@ -5,7 +5,7 @@ use strict;
 
 use base qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
-__PACKAGE__->mk_ro_accessors(qw(service service_url mech));
+__PACKAGE__->mk_ro_accessors(qw(mech));
 
 use Params::Validate qw(validate SCALAR);
 use WWW::Mechanize;
@@ -16,9 +16,6 @@ sub new {
     my $class = shift;
 
     my %args = validate(@_, {
-        service => {
-            type     => SCALAR,
-        },
         auth => {
             can      => qw(set_application login),
         },
