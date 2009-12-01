@@ -24,9 +24,8 @@ sub get_service_url {
 }
 
 sub _fetch_and_update {
-    my $self = shift;
+    my ($self, %args) = @_;
 
-    my %args = @_;
     $args{ui} = 1 if !exists $args{ui};
 
     my $mech = $self->get_mech;
