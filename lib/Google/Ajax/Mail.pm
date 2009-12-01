@@ -3,6 +3,8 @@ package Google::Ajax::Mail;
 use warnings;
 use strict;
 
+use base qw(Google::Ajax);
+
 use Params::Validate qw(validate_pos SCALAR);
 use URI::Escape;
 
