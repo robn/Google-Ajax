@@ -6,7 +6,6 @@ use strict;
 use base qw(Google::Ajax);
 
 use Params::Validate qw(validate_pos SCALAR);
-use URI::Escape;
 
 sub get_service {
     return "mail";
@@ -30,8 +29,8 @@ sub _fetch_data {
 
     my $mech = $self->get_mech;
 
-    my $url = uri_escape($self->get_service_url . uri_escape(join '&', map { $_.'='.$args{$_} } keys %args));
-    $mech->get($url);
+    my $query = join '&', map { $_.'='.$args{$_} } keys %args;
+    $mech->get($self->get_service_url.'&'.$query);
 
     # XXX check errors
     
