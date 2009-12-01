@@ -28,7 +28,9 @@ sub new {
     my $self = bless \%args, $class;
 
     if (!exists $self->{mech}) {
-        $self->{mech} = WWW::Mechanize->new;
+        $self->{mech} = WWW::Mechanize->new(
+            stack_depth => 0,
+        );
     }
 
     if (!$self->{mech}->default_header("User-Agent")) {
