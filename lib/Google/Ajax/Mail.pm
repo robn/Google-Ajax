@@ -47,6 +47,20 @@ sub _fetch_and_update {
 }
 
 sub _get_cached_data {
+    my ($self, $code) = @_;
+
+    # XXX add timestamps to cache and check age
+    return $self->{cache}->{$code} if exists $self->{cache}->{$code};
+
+    # XXX set up tables to map return codes to ajax requests
+    $self->_fetch_and_update(
+        view   => "tl",
+        search => "inbox",
+    );
+
+    return $self->{cache}->{$code} if exists $self->{cache}->{$code};
+
+    return;
 }
 
 sub get_usage {
