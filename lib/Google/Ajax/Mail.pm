@@ -23,7 +23,7 @@ sub get_service_url {
     return "https://mail.google.com/";
 }
 
-sub _fetch_and_update {
+sub _fetch_data {
     my ($self, %args) = @_;
 
     $args{ui} = 1 if !exists $args{ui};
@@ -34,6 +34,8 @@ sub _fetch_and_update {
     $mech->get($url);
 
     # XXX check errors
+    
+    my $data = {};
 
     my $content = $mech->content;
     $content =~ m/<!--/sg;
@@ -42,8 +44,10 @@ sub _fetch_and_update {
         $item =~ s/([\$\@])/\\$1/mg;
         my $args = eval $item;  # XXX this is just a little too trusting. replace with a real parser
         my $code = shift @$args;
-        $self->{cache}->{$code} = $args;
+        $data->{$code} = $args;
     }
+
+    return $data;
 }
 
 sub _get_cached_data {
@@ -53,7 +57,7 @@ sub _get_cached_data {
     return $self->{cache}->{$code} if exists $self->{cache}->{$code};
 
     # XXX set up tables to map return codes to ajax requests
-    $self->_fetch_and_update(
+    $self->{cache} = $self->_fetch_data(
         view   => "tl",
         search => "inbox",
     );
