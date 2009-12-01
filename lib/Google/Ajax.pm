@@ -10,6 +10,11 @@ __PACKAGE__->mk_ro_accessors(qw(mech));
 use Params::Validate qw(validate SCALAR);
 use WWW::Mechanize;
 
+use Google::Ajax::ClientLogin;
+use Google::Ajax::SSO;
+
+use Google::Ajax::Mail;
+
 our $VERSION = "0.01";
 
 sub new {
