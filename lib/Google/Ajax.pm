@@ -21,10 +21,13 @@ sub new {
     my $class = shift;
 
     my %args = validate(@_, {
-        auth => {
-            can      => qw(set_application login),
+        domain => {
+            type     => SCALAR,
         },
-        mech => {
+        auth   => {
+            can      => [qw(set_application login)],
+        },
+        mech   => {
             isa      => "WWW::Mechanize",
             optional => 1,
         },
